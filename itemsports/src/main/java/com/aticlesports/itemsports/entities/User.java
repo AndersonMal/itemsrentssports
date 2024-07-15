@@ -29,4 +29,8 @@ public class User {
     @NonNull
     private  int number;
 
+    @NonNull
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
 }
