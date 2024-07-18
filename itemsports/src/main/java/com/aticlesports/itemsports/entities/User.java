@@ -4,10 +4,9 @@ package com.aticlesports.itemsports.entities;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
-
+@Data
+@Builder
 @Entity
-@Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @SQLDelete(sql = "UPDATE user SET deleted = true WHERE id=?")

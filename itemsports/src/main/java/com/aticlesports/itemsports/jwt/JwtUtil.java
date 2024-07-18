@@ -3,65 +3,53 @@ package com.aticlesports.itemsports.jwt;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-@Service
+@Component
 public class JwtUtil {
 
-    @Value("${jwt.secret.key}")
-    private String secret;
+    private static final SecretKey SECRET_KEY = Keys    .secretKeyFor(SignatureAlgorithm.HS512);
+    private static final long EXPIRATION_TIME = 86400000; // 24 horas
 
-    public String extractUsername(String token) {
-        return extractClaims(token, Claims::getSubject);
-    }
-
-    public Date extractExpiration(String token) {
-        return extractClaims(token, Claims::getExpiration);
-    }
-
-    public <T> T extractClaims(String token, Function<Claims, T> claimsResolver) {
-        final Claims claims = extractAllClaims(token);
-        return claimsResolver.apply(claims);
-    }
-
-    public Claims extractAllClaims(String token) {
-        return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
-    }
-
-    public Boolean isTokenExpired(String token) {
-        return extractExpiration(token).before(new Date());
-    }
-
-    public Boolean validateToken(String token, UserDetails userDetails) {
-        final String username = extractUsername(token);
-        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
-    }
-
-    public String generateToken(String email, List<String> roles, String name, String lastName, String picture) {
-        Date now = new Date();
-
-        List<String> prefixedRoles = roles.stream()
-                .map(role -> "ROLE_" + role)
-                .collect(Collectors.toList());
-
+    public String generateToken(String email, List<String> roles, String name) {
         return Jwts.builder()
                 .setSubject(email)
-                .claim("authorities", prefixedRoles)
-                .claim("name",name)
-                .claim("lastName",lastName)
-                .claim("picture",picture)
-                .setIssuedAt(now)
-                .setExpiration(new Date(System.currentTimeMillis() + 100 * 60 * 60 * 10))
-                .signWith(SignatureAlgorithm.HS512, secret)
+                .claim("roles", roles)
+                .claim("name", name)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+                .signWith(SECRET_KEY)
                 .compact();
     }
 
+    public String extractUsername(String token) {
+        return extractAllClaims(token).getSubject();
+    }
 
+    public Claims extractAllClaims(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(SECRET_KEY)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+    }
+
+    public boolean isTokenExpired(String token) {
+        return extractAllClaims(token).getExpiration().before(new Date());
+    }
+
+    public boolean validateToken(String token, UserDetails userDetails) {
+        final String username = extractUsername(token);
+        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+    }
 }

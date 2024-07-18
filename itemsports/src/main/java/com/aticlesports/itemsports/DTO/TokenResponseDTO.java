@@ -1,6 +1,5 @@
 package com.aticlesports.itemsports.DTO;
 
-import com.aticlesports.itemsports.entities.Role;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,11 +9,11 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserDTO {
+public class TokenResponseDTO {
 
-    private String name;
-    private Role role;
     private String email;
+    private boolean email_verified;
+    private String name;
     private String password;
 
 }

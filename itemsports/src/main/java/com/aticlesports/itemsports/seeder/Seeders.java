@@ -25,14 +25,11 @@ public class Seeders implements CommandLineRunner {
 
     private void loadUsers() {
 
-
             User user1 = new User(1L, "Anderson", "anderfusion@gmail.com", "1234", 123456, Role.USER);
             User user2 = new User(2L, "Yesid", "isseisama202@gmail.com","23422" ,12345,  Role.ADMIN);
             userRepository.save(user1);
             userRepository.save(user2);
             System.out.println("Users loaded successfully.");
-
-
         }
 
 }
