@@ -31,6 +31,10 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/user/login").permitAll()
                         .requestMatchers("/user/register").permitAll()
+                        .requestMatchers("/store/register").permitAll()
+                        .requestMatchers("/store/login").permitAll()
+                        .requestMatchers("/product/create").permitAll()
+
                         .anyRequest().authenticated())
                 .sessionManagement(sessionManager-> sessionManager
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))

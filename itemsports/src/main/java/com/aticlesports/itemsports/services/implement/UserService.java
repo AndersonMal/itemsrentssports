@@ -38,7 +38,6 @@ public class UserService implements IUserService {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("User already exists");
         }
 
-        // Registrar el nuevo usuario
         User user = new User();
         user.setEmail(userDTO.getEmail());
         user.setName(userDTO.getName());

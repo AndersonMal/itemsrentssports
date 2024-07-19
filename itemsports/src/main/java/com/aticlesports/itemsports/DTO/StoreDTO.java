@@ -17,5 +17,6 @@ public class StoreDTO {
    private String password;
    private int number;
    private Location location;
+   private long storeId;
 
 }

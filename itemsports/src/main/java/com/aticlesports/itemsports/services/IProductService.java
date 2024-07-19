@@ -1,4 +1,10 @@
 package com.aticlesports.itemsports.services;
 
-public interface IProductService {
+import com.aticlesports.itemsports.DTO.ProductDTO;
+import org.springframework.http.ResponseEntity;
+
+public interface IProductService {;
+
+    ResponseEntity<?> createProduct(ProductDTO productDTO, String email);
+
 }
