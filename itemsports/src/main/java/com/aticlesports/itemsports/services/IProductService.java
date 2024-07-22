@@ -7,4 +7,7 @@ public interface IProductService {;
 
     ResponseEntity<?> createProduct(ProductDTO productDTO, String email);
 
+    ResponseEntity<?> GetAllProducts();
+
+    ResponseEntity<?> UpdateProduct(ProductDTO productDTO, Long id);
 }

@@ -1,5 +1,6 @@
 package com.aticlesports.itemsports.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -32,6 +33,7 @@ public class Products {
 
     @ManyToOne
     @JoinColumn(name = "store_id", nullable = false)
+    @JsonBackReference
     private Stores store;
 
 }

@@ -6,5 +6,5 @@ import org.springframework.http.ResponseEntity;
 
 public interface IUserService {
     ResponseEntity<?> saveUser(UserDTO userDTO);
-    ResponseEntity<?> loginUser(LoginDTO loginDTO);
+    ResponseEntity<?> loginUser(String email, String password);
 }

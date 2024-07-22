@@ -1,6 +1,5 @@
 package com.aticlesports.itemsports.services.implement;
 
-import com.aticlesports.itemsports.DTO.LoginDTO;
 import com.aticlesports.itemsports.DTO.Token;
 import com.aticlesports.itemsports.DTO.UserDTO;
 import com.aticlesports.itemsports.entities.Role;
@@ -11,6 +10,7 @@ import com.aticlesports.itemsports.services.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -23,6 +23,8 @@ public class UserService implements IUserService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     private final JwtUtil jwtUtil;
 
@@ -41,32 +43,32 @@ public class UserService implements IUserService {
         User user = new User();
         user.setEmail(userDTO.getEmail());
         user.setName(userDTO.getName());
-        user.setPassword(userDTO.getPassword());
+        user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         user.setRole(Role.USER);
-        userRepository.save(user);
 
         List<String> roles = new ArrayList<>();
         roles.add(user.getRole().name());
-        String jwtToken = jwtUtil.generateToken(user.getEmail(), roles, user.getName());
 
-        Token tokenMessage = new Token();
-        tokenMessage.setMessage(jwtToken);
+        User newUser =     userRepository.save(user);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(tokenMessage);
+        return ResponseEntity.ok().body(newUser);
     }
     @Override
-    public ResponseEntity<?> loginUser(LoginDTO loginDTO) {
-        Optional<User> user = userRepository.findByEmail(loginDTO.getEmail());
-        if (user.isPresent() && user.get().getPassword().equals(loginDTO.getPassword())) {
-            List<String> roles = new ArrayList<>();
-            roles.add(user.get().getRole().name());
+    public ResponseEntity<?> loginUser(String email, String password) {
+        Optional<User> userOptional = userRepository.findByEmail(email);
 
-            String jwt = jwtUtil.generateToken(user.get().getEmail(), roles, user.get().getName());
-            Token tokenMessage = new Token();
-            tokenMessage.setMessage(jwt);
-            return ResponseEntity.ok().body(tokenMessage);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            // Verifica si la contraseña es correcta
+            if (passwordEncoder.matches(password, user.getPassword())) {
+                // Genera un token para el usuario con el email, rol y nombre
+                String token = jwtUtil.generateToken(user.getEmail(), List.of(user.getRole().name()), user.getName());
+                return ResponseEntity.ok().body(new Token(token));
+            } else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Contraseña incorrecta");
+            }
         }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password");
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado");
     }
 
 

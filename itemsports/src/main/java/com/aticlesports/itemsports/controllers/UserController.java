@@ -1,6 +1,5 @@
 package com.aticlesports.itemsports.controllers;
 
-import com.aticlesports.itemsports.DTO.LoginDTO;
 import com.aticlesports.itemsports.DTO.UserDTO;
 import com.aticlesports.itemsports.services.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,10 +24,9 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginDTO loginDTO) {
-        return userService.loginUser(loginDTO);
+    public ResponseEntity<?> loginUser(@RequestParam String email, @RequestParam String password) {
+        return userService.loginUser(email, password);
     }
-
 
 
 }

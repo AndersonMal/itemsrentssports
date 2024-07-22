@@ -1,15 +1,10 @@
 package com.aticlesports.itemsports.controllers;
 
-
-import com.aticlesports.itemsports.DTO.LoginDTO;
 import com.aticlesports.itemsports.DTO.StoreDTO;
 import com.aticlesports.itemsports.services.IStoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/store")
@@ -28,8 +23,14 @@ public class StoreController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginDTO loginDTO) {
-        return storeService.loginStore(loginDTO.getEmail(), loginDTO.getPassword());
+    public ResponseEntity<?> loginStore(@RequestParam String email, @RequestParam String password) {
+        return storeService.loginStore(email, password);
+    }
+
+
+    @GetMapping("/get-all")
+    public ResponseEntity<?> getAllStores(){
+        return storeService.GetAllStores();
     }
 
 }

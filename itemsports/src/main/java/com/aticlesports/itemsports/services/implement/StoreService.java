@@ -2,6 +2,7 @@ package com.aticlesports.itemsports.services.implement;
 
 import com.aticlesports.itemsports.DTO.StoreDTO;
 import com.aticlesports.itemsports.DTO.Token;
+import com.aticlesports.itemsports.entities.Products;
 import com.aticlesports.itemsports.entities.Stores;
 import com.aticlesports.itemsports.jwt.JwtUtil;
 import com.aticlesports.itemsports.repositories.StoresRepository;
@@ -21,15 +22,15 @@ public class StoreService implements IStoreService {
     @Autowired
     private StoresRepository storesRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+
     private final JwtUtil jwtUtil;
 
     public StoreService(JwtUtil jwtUtil){
         this.jwtUtil = jwtUtil;
     }
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
 
     @Override
     public ResponseEntity<?> createStore(StoreDTO storeDTO) {
@@ -41,7 +42,7 @@ public class StoreService implements IStoreService {
 
         Stores stores = new Stores();
         stores.setEmail(storeDTO.getEmail());
-        stores.setPassword(storeDTO.getPassword());
+        stores.setPassword(passwordEncoder.encode(storeDTO.getPassword()));
         stores.setName(storeDTO.getName());
         stores.setNumber(storeDTO.getNumber());
         stores.setLocation(storeDTO.getLocation());
@@ -54,17 +55,28 @@ public class StoreService implements IStoreService {
     @Override
     public ResponseEntity<?> loginStore(String email, String password) {
         Optional<Stores> storeOptional = storesRepository.findByEmail(email);
-
-        if (storeOptional.isPresent()   ) {
+        if (storeOptional.isPresent()) {
             Stores store = storeOptional.get();
+            System.out.println("Contraseña almacenada: " + store.getPassword());
+            System.out.println("Contraseña ingresada: " + password);
             if (passwordEncoder.matches(password, store.getPassword())) {
-                // Genera un token para la tienda
                 String token = jwtUtil.generateToken(store.getEmail(), List.of("STORE"), store.getName());
                 return ResponseEntity.ok().body(new Token(token));
             } else {
+                System.out.println("Contraseña incorrecta");
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Contraseña incorrecta");
             }
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Tienda no encontrada");
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Tienda no encontrada");
     }
+
+    @Override
+    public ResponseEntity<?> GetAllStores(){
+        List<Stores> listStores = storesRepository.findAll();
+
+        return ResponseEntity.ok(listStores);
+    }
+
+
 }

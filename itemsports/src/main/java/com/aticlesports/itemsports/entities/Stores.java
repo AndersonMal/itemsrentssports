@@ -2,6 +2,7 @@ package com.aticlesports.itemsports.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+
 import java.util.List;
 
 @Entity

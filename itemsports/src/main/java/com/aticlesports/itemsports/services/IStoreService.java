@@ -7,4 +7,6 @@ public interface IStoreService {
     ResponseEntity<?> createStore(StoreDTO storeDTO);
 
     ResponseEntity<?> loginStore(String email, String password);
+
+    ResponseEntity<?> GetAllStores();
 }

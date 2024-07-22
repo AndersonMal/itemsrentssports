@@ -10,6 +10,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -33,7 +35,11 @@ public class SecurityConfig {
                         .requestMatchers("/user/register").permitAll()
                         .requestMatchers("/store/register").permitAll()
                         .requestMatchers("/store/login").permitAll()
+                        .requestMatchers("/store/get-all").permitAll()
                         .requestMatchers("/product/create").permitAll()
+                        .requestMatchers("/product/getall").permitAll()
+                        .requestMatchers("/product/update/{id}").permitAll()
+
 
                         .anyRequest().authenticated())
                 .sessionManagement(sessionManager-> sessionManager

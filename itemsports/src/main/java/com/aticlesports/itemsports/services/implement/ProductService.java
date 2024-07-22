@@ -7,10 +7,10 @@ import com.aticlesports.itemsports.repositories.ProductRepository;
 import com.aticlesports.itemsports.repositories.StoresRepository;
 import com.aticlesports.itemsports.services.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -35,15 +35,51 @@ public class ProductService implements IProductService {
         Products product = new Products();
         product.setName(productDTO.getName());
         product.setCategory(productDTO.getCategory());
+        product.setDescription(productDTO.getDescription());
         product.setPricexday(productDTO.getPricexday());
         product.setAmount(productDTO.getAmount());
         product.setStore(store);
 
-        // Verifica el producto antes de guardar
         System.out.println("Saving product: " + product);
         productRepository.save(product);
 
         return ResponseEntity.ok().build();
+    }
+
+    @Override
+    public ResponseEntity<?> GetAllProducts() {
+        List<Products> listProducts = productRepository.findAll();
+
+        return ResponseEntity.ok(listProducts);
+    }
+
+    @Override
+    public ResponseEntity<?> UpdateProduct(ProductDTO productDTO, Long id){
+        Optional<Products> productOptional = productRepository.findById(id);
+        if (productOptional.isEmpty()) {
+            System.out.println("Store not found for id: " + id);
+            return ResponseEntity.badRequest().build();
+        }
+
+        Products product = productOptional.get();
+        if (productDTO.getName() != null) {
+            product.setName(productDTO.getName());
+        }
+        if (productDTO.getDescription() != null) {
+            product.setDescription(productDTO.getDescription());
+        }
+        if (productDTO.getPricexday() != null) {
+            product.setPricexday(productDTO.getPricexday());
+        }
+        if (productDTO.getCategory() != null) {
+            product.setCategory(productDTO.getCategory());
+        }
+        product.setAmount(productDTO.getAmount());
+
+        productRepository.save(product);
+
+        return ResponseEntity.ok().body(product);
+
     }
 
 }

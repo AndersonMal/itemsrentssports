@@ -1,6 +1,5 @@
 package com.aticlesports.itemsports.jwt;
 
-
 import com.aticlesports.itemsports.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

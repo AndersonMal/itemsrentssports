@@ -12,7 +12,6 @@ import lombok.Setter;
 public class TokenResponseDTO {
 
     private String email;
-    private boolean email_verified;
     private String name;
     private String password;
 
