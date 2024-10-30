@@ -28,7 +28,7 @@ public class Products {
     private Category category;
 
     @NonNull
-    private int amount;
+    private Integer amount;
 
 
     @ManyToOne

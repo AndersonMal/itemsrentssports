@@ -32,7 +32,6 @@ public class UserService implements IUserService {
         this.jwtUtil = jwtUtil;
     }
 
-
     @Override
     public ResponseEntity<?> saveUser(UserDTO userDTO) {
         Optional<User> existingUser = userRepository.findByEmail(userDTO.getEmail());
@@ -45,6 +44,7 @@ public class UserService implements IUserService {
         user.setName(userDTO.getName());
         user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         user.setRole(Role.USER);
+        
 
         List<String> roles = new ArrayList<>();
         roles.add(user.getRole().name());
@@ -53,6 +53,7 @@ public class UserService implements IUserService {
 
         return ResponseEntity.ok().body(newUser);
     }
+
     @Override
     public ResponseEntity<?> loginUser(String email, String password) {
         Optional<User> userOptional = userRepository.findByEmail(email);
@@ -70,7 +71,5 @@ public class UserService implements IUserService {
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado");
     }
-
-
 
 }

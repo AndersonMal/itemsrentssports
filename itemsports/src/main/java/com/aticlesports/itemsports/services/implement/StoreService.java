@@ -2,6 +2,7 @@ package com.aticlesports.itemsports.services.implement;
 
 import com.aticlesports.itemsports.DTO.StoreDTO;
 import com.aticlesports.itemsports.DTO.Token;
+import com.aticlesports.itemsports.entities.Role;
 import com.aticlesports.itemsports.entities.Stores;
 import com.aticlesports.itemsports.jwt.JwtUtil;
 import com.aticlesports.itemsports.repositories.StoresRepository;
@@ -24,7 +25,6 @@ public class StoreService implements IStoreService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-
     private final JwtUtil jwtUtil;
 
     public StoreService(JwtUtil jwtUtil){
@@ -45,6 +45,7 @@ public class StoreService implements IStoreService {
         stores.setName(storeDTO.getName());
         stores.setNumber(storeDTO.getNumber());
         stores.setLocation(storeDTO.getLocation());
+        stores.setRole(Role.STORE);
 
         Stores newStore = storesRepository.save(stores);
 
@@ -66,14 +67,13 @@ public class StoreService implements IStoreService {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Contraseña incorrecta");
             }
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Tienda no encontrada");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Tienda no encontrada");
         }
     }
 
     @Override
     public ResponseEntity<?> GetAllStores(){
         List<Stores> listStores = storesRepository.findAll();
-
         return ResponseEntity.ok(listStores);
     }
 

@@ -10,4 +10,6 @@ public interface IProductService {;
     ResponseEntity<?> GetAllProducts();
 
     ResponseEntity<?> UpdateProduct(ProductDTO productDTO, Long id);
+
+    ResponseEntity<?> DeleteProduct(Long id);
 }

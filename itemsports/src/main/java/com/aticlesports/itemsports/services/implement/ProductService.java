@@ -7,6 +7,7 @@ import com.aticlesports.itemsports.repositories.ProductRepository;
 import com.aticlesports.itemsports.repositories.StoresRepository;
 import com.aticlesports.itemsports.services.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +27,7 @@ public class ProductService implements IProductService {
     public ResponseEntity<?> createProduct(ProductDTO productDTO, String email){
 
         Optional<Stores> storeOptional = storesRepository.findByEmail(email);
-        if(storeOptional.isEmpty()){
+        if(storeOptional.isEmpty()) {
             System.out.println("Store not found for email: " + email);
             return ResponseEntity.badRequest().build();
         }
@@ -38,12 +39,13 @@ public class ProductService implements IProductService {
         product.setDescription(productDTO.getDescription());
         product.setPricexday(productDTO.getPricexday());
         product.setAmount(productDTO.getAmount());
+
         product.setStore(store);
 
         System.out.println("Saving product: " + product);
         productRepository.save(product);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body("Successfully create product");
     }
 
     @Override
@@ -60,7 +62,6 @@ public class ProductService implements IProductService {
             System.out.println("Store not found for id: " + id);
             return ResponseEntity.badRequest().build();
         }
-
         Products product = productOptional.get();
         if (productDTO.getName() != null) {
             product.setName(productDTO.getName());
@@ -75,11 +76,19 @@ public class ProductService implements IProductService {
             product.setCategory(productDTO.getCategory());
         }
         product.setAmount(productDTO.getAmount());
-
         productRepository.save(product);
-
         return ResponseEntity.ok().body(product);
 
+    }
+
+    @Override
+    public ResponseEntity<?> DeleteProduct(Long id){
+        if (productRepository.existsById(id)) {
+            productRepository.deleteById(id);
+            return ResponseEntity.ok().body("Product deleted successfully.");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product not found.");
+        }
     }
 
 }

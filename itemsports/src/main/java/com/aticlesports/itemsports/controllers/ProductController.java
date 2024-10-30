@@ -4,9 +4,11 @@ import com.aticlesports.itemsports.DTO.ProductDTO;
 import com.aticlesports.itemsports.jwt.JwtUtil;
 import com.aticlesports.itemsports.services.IProductService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -48,5 +50,14 @@ public class ProductController {
         }
     }
 
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> deleteProduct(@PathVariable Long id){
+        try{
+            productService.DeleteProduct(id);
+            return ResponseEntity.ok().body("Deleted product successful");
+        }catch (Exception e) {
+            return  ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product not found");
+        }
+    }
 
 }

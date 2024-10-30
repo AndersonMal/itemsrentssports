@@ -21,14 +21,13 @@ public class SecurityConfig {
     private final AuthenticationProvider authProvider;
 
     private final JwtFilter jwtFilter;
-    private static final String ROLE_ADMIN = "ADMIN";
-    private static final String ROLE_USER = "USER";
 
     @Bean
     public SecurityFilterChain securityFilterChain (HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                         .requestMatchers("/user/login").permitAll()
                         .requestMatchers("/user/register").permitAll()
                         .requestMatchers("/store/register").permitAll()
@@ -37,6 +36,7 @@ public class SecurityConfig {
                         .requestMatchers("/product/create").permitAll()
                         .requestMatchers("/product/getall").permitAll()
                         .requestMatchers("/product/update/{id}").permitAll()
+                        .requestMatchers("/product/delete/{id}").permitAll()
 
 
                         .anyRequest().authenticated())

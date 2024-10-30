@@ -36,5 +36,8 @@ public class Stores {
     @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Products> products;
 
+    @NonNull
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
 }
