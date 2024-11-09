@@ -14,6 +14,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ProductDTO {
 
+        private Long id_product;
         @NotNull(message = "name is required.")
         private String name;
         private String description;
