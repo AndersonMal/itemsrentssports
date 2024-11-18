@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -15,7 +16,7 @@ import java.util.Date;
 public class Rent {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY  )
     private Long id;
 
     @NonNull
@@ -29,10 +30,10 @@ public class Rent {
     private Products products;
 
     @NonNull
-    private Date dateini;
+    private LocalDate dateini;
 
     @NonNull
-    private  Date dateend;
+    private LocalDate dateend;
 
     @NonNull
     private int pricetot;

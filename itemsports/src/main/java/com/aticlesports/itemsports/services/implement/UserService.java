@@ -60,16 +60,14 @@ public class UserService implements IUserService {
 
         if (userOptional.isPresent()) {
             User user = userOptional.get();
-            // Verifica si la contraseña es correcta
             if (passwordEncoder.matches(password, user.getPassword())) {
-                // Genera un token para el usuario con el email, rol y nombre
                 String token = jwtUtil.generateToken(user.getEmail(), List.of(user.getRole().name()), user.getName());
                 return ResponseEntity.ok().body(new Token(token));
             } else {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Contraseña incorrecta");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Password incorrect");
             }
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado");
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
     }
 
 }

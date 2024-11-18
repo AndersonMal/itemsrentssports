@@ -57,7 +57,7 @@ public class JwtUtil {
         return Jwts.parserBuilder()
                 .setSigningKey(SECRET_KEY)
                 .build()
-                .parseClaimsJws(token)
+                      .parseClaimsJws(token)
                 .getBody();
     }
 

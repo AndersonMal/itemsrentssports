@@ -37,6 +37,7 @@ public class SecurityConfig {
                         .requestMatchers("/product/getall").permitAll()
                         .requestMatchers("/product/update/{id}").permitAll()
                         .requestMatchers("/product/delete/{id}").permitAll()
+                        .requestMatchers("/rent/createrent").permitAll()
 
 
                         .anyRequest().authenticated())
