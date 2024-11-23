@@ -3,9 +3,7 @@ package com.aticlesports.itemsports.entities;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
-
 import java.time.LocalDate;
-import java.util.Date;
 
 @Entity
 @Getter
@@ -16,7 +14,7 @@ import java.util.Date;
 public class Rent {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY  )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NonNull
@@ -28,6 +26,11 @@ public class Rent {
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
     private Products products;
+
+    @NonNull
+    @ManyToOne
+    @JoinColumn(name = "store_id", nullable = false)
+    private  Stores stores;
 
     @NonNull
     private LocalDate dateini;

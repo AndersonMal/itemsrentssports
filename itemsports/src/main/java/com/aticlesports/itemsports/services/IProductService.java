@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 
 public interface IProductService {;
 
-    ResponseEntity<?> createProduct(ProductDTO productDTO, String email);
+    ResponseEntity<?> createProduct(ProductDTO productDTO, String email, String authHeader);
 
     ResponseEntity<?> GetAllProducts();
 

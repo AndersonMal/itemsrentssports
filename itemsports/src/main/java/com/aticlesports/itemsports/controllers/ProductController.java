@@ -24,13 +24,15 @@ public class ProductController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> createProduct(@RequestBody ProductDTO productDTO, HttpServletRequest request){
-        String token = request.getHeader("Authorization").substring(7);
+    public ResponseEntity<?> createProduct(@RequestBody ProductDTO productDTO,  @RequestHeader(value = "Authorization", required = false) String authHeader){
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Authorization header is missing or invalid");
+        }
+        String token = authHeader.substring(7);
         String email = jwtUtil.extractUsername(token);
 
-        System.out.println("Email from token: " + email);
+        return productService.createProduct(productDTO, email, authHeader);
 
-        return productService.createProduct(productDTO, email);
     }
 
     @GetMapping("/getall")

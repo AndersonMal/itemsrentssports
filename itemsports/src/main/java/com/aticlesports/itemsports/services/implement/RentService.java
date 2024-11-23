@@ -1,8 +1,11 @@
 package com.aticlesports.itemsports.services.implement;
 
 import com.aticlesports.itemsports.DTO.ProductDTO;
+import com.aticlesports.itemsports.DTO.RentDTO;
+import com.aticlesports.itemsports.DTO.StoreDTO;
 import com.aticlesports.itemsports.entities.Products;
 import com.aticlesports.itemsports.entities.Rent;
+import com.aticlesports.itemsports.entities.Stores;
 import com.aticlesports.itemsports.entities.User;
 import com.aticlesports.itemsports.jwt.JwtUtil;
 import com.aticlesports.itemsports.repositories.ProductRepository;
@@ -44,7 +47,7 @@ public class RentService implements IRentService {
 
 
     @Override
-    public ResponseEntity<?> createRent(ProductDTO productDTO, int quantity, String authHeader){
+    public ResponseEntity<?> createRent(ProductDTO productDTO,int quantity, String authHeader){
 
             String token = authHeader.substring(7);
             String email = jwtUtil.extractUsername(token);
@@ -60,14 +63,23 @@ public class RentService implements IRentService {
                 return ResponseEntity.status(HttpStatus.CONFLICT).body("Product not found");
             }
 
+        Optional<Stores> storeOptional = storesRepository.findById(productDTO.getStoreId());
+        if (storeOptional.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Store not found");
+        }
+
+        Stores store = storeOptional.get();
+
+
             Products products = product.get();
             if (products.getAmount() < quantity) {
                 return ResponseEntity.status(HttpStatus.CONFLICT).body("Quantity not sufficient");
             }else{
                 Rent rent = new Rent();
                 rent.setProducts(products);
+                rent.setStores(store);
                 rent.setDateini(LocalDate.now());
-                rent.setUser(user);rent.setProducts(products);
+                rent.setUser(user);
                 rent.setDateend(LocalDate.now().plusDays(7));
                 rent.setPricetot((int) (products.getPricexday()*quantity));
                 products.setAmount(products.getAmount() - quantity);

@@ -24,7 +24,11 @@ public class ProductService implements IProductService {
     private ProductRepository productRepository;
 
     @Override
-    public ResponseEntity<?> createProduct(ProductDTO productDTO, String email){
+    public ResponseEntity<?> createProduct(ProductDTO productDTO, String email, String authHeader){
+
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Authorization header is missing or invalid");
+        }
 
         Optional<Stores> storeOptional = storesRepository.findByEmail(email);
         if(storeOptional.isEmpty()) {
