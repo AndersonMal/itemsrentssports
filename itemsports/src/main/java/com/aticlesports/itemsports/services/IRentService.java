@@ -8,4 +8,6 @@ import org.springframework.http.ResponseEntity;
 public interface IRentService {
 
     ResponseEntity<?> createRent(ProductDTO productDTO, int quantity, String authHeader);
+
+    ResponseEntity<?> updateRent(ProductDTO productDTO, Long id, int quantity);
 }
